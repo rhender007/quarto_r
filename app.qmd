@@ -4,6 +4,18 @@ format: html
 editor: visual
 ---
 
+<--
+install.packages("shiny")
+install.packages("ggplot2")
+install.packages("readr")
+install.packages("DT")
+install.packages("dplyr")
+# Run Quarto Document: Run the Quarto document as a web app using:
+
+# bash
+quarto render app.qmd --to html --serve
+-->
+
 ```{r setup, include=FALSE}
 library(ggplot2)
 library(readr)

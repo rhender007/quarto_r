@@ -1,3 +1,4 @@
+
 ---
 title: "Sample R Quarto App"
 format: html
@@ -5,5 +6,48 @@ runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
+# Load necessary libraries in the setup chunk
 library(shiny)
 library(ggplot2)
+```
+
+## Interactive Plot
+
+This simple Quarto app reads data from a CSV file, displays it in a table, and allows users to select a column for plotting.
+
+```{r}
+# Load data from CSV
+data <- read.csv("data.csv")
+
+# Define UI
+ui <- fluidPage(
+  titlePanel("Sample Quarto Shiny App"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("column", "Select a Column:", choices = colnames(data)),
+      actionButton("updatePlot", "Update Plot")
+    ),
+    mainPanel(
+      tableOutput("dataTable"),
+      plotOutput("plot")
+    )
+  )
+)
+
+# Define server logic
+server <- function(input, output, session) {
+  output$dataTable <- renderTable({
+    head(data) # Show first few rows of the data
+  })
+  
+  observeEvent(input$updatePlot, {
+    output$plot <- renderPlot({
+      ggplot(data, aes_string(x = input$column)) +
+        geom_histogram(binwidth = 1) +
+        labs(title = paste("Histogram of", input$column), x = input$column)
+    })
+  })
+}
+
+shinyApp(ui, server)
+```

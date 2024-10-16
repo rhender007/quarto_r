@@ -1,26 +1,9 @@
 ---
-title: "CSV Reader and Visualizer"
+title: "Sample R Quarto App"
 format: html
-editor: visual
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
-# Load necessary libraries
+library(shiny)
 library(ggplot2)
-library(readr)
-library(DT)
-library(dplyr)
-
-# Load the predefined CSV file
-data <- read_csv("data.csv")
-
-# Display the table of data
-datatable(data)
-
-# Display summary statistics of the data
-summary(data)
-
-# Create a scatter plot of the first two columns
-ggplot(data, aes(x = data[[1]], y = data[[2]])) +
-  geom_point() +
-  labs(x = names(data)[1], y = names(data)[2], title = "Scatter Plot of First Two Columns")

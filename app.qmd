@@ -1,0 +1,56 @@
+---
+title: "CSV Reader and Visualizer"
+format: html
+editor: visual
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(readr)
+library(DT)
+library(dplyr)
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("CSV Reader and Visualizer"),
+  
+  # File input
+  fileInput("file", "Upload CSV File", accept = ".csv"),
+  
+  # Table output
+  DTOutput("table"),
+  
+  # Summary stats output
+  verbatimTextOutput("summary"),
+  
+  # Graph output
+  plotOutput("plot")
+)
+
+server <- function(input, output) {
+  
+  # Reactive to load the CSV
+  data <- reactive({
+    req(input$file)
+    read_csv(input$file$datapath)
+  })
+  
+  # Show table of data
+  output$table <- renderDT({
+    data()
+  })
+  
+  # Display summary stats
+  output$summary <- renderPrint({
+    summary(data())
+  })
+  
+  # Render plot
+  output$plot <- renderPlot({
+    ggplot(data(), aes(x = data()[[1]], y = data()[[2]])) +
+      geom_point() +
+      labs(x = names(data())[1], y = names(data())[2], title = "Scatter Plot of First Two Columns")
+  })
+}
+
+shinyApp(ui, server)
